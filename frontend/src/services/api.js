@@ -1,4 +1,7 @@
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+let base = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+if (base.endsWith('/')) base = base.slice(0, -1);
+if (!base.endsWith('/api')) base += '/api';
+const API_URL = base;
 
 export const getGraphData = async () => {
   const res = await fetch(`${API_URL}/graph`);
