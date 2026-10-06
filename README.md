@@ -330,7 +330,7 @@ A full functional and mathematical audit was performed on this system.
 
 ## 18. Author
 
-**Author:** Shivansh Chaurasiya  
+**Author:** Samriddhi  
 **Program:** MCA (Data Science)  
 **Institution:** Chandigarh University  
 
