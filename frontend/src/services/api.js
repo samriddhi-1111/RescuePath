@@ -3,13 +3,34 @@ if (base.endsWith('/')) base = base.slice(0, -1);
 if (!base.endsWith('/api')) base += '/api';
 const API_URL = base;
 
+const fetchWithTimeout = async (resource, options = {}) => {
+  const { timeout = 15000 } = options;
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), timeout);
+  
+  try {
+    const response = await fetch(resource, {
+      ...options,
+      signal: controller.signal  
+    });
+    clearTimeout(id);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return response;
+  } catch (error) {
+    clearTimeout(id);
+    throw error;
+  }
+};
+
 export const getGraphData = async () => {
-  const res = await fetch(`${API_URL}/graph`);
+  const res = await fetchWithTimeout(`${API_URL}/graph`);
   return res.json();
 };
 
 export const runDijkstra = async (source, destination, mode = 'fastest') => {
-  const res = await fetch(`${API_URL}/dijkstra`, {
+  const res = await fetchWithTimeout(`${API_URL}/dijkstra`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ source, destination, mode })
@@ -18,7 +39,7 @@ export const runDijkstra = async (source, destination, mode = 'fastest') => {
 };
 
 export const runBFS = async (source, destination) => {
-  const res = await fetch(`${API_URL}/bfs`, {
+  const res = await fetchWithTimeout(`${API_URL}/bfs`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ source, destination })
@@ -27,17 +48,17 @@ export const runBFS = async (source, destination) => {
 };
 
 export const runKruskal = async () => {
-  const res = await fetch(`${API_URL}/kruskal`);
+  const res = await fetchWithTimeout(`${API_URL}/kruskal`);
   return res.json();
 };
 
 export const getStatistics = async () => {
-  const res = await fetch(`${API_URL}/statistics`);
+  const res = await fetchWithTimeout(`${API_URL}/statistics`);
   return res.json();
 };
 
 export const loadScenario = async (scenario) => {
-  const res = await fetch(`${API_URL}/scenarios/load`, {
+  const res = await fetchWithTimeout(`${API_URL}/scenarios/load`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ scenario })
@@ -46,7 +67,7 @@ export const loadScenario = async (scenario) => {
 };
 
 export const updateRoadStatus = async (from, to, status, risk) => {
-  const res = await fetch(`${API_URL}/road/status`, {
+  const res = await fetchWithTimeout(`${API_URL}/road/status`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ from, to, status, risk })
@@ -55,7 +76,7 @@ export const updateRoadStatus = async (from, to, status, risk) => {
 };
 
 export const findNearestFacility = async (source, facilityType, algorithm = 'dijkstra') => {
-  const res = await fetch(`${API_URL}/nearest-facility`, {
+  const res = await fetchWithTimeout(`${API_URL}/nearest-facility`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ source, facilityType, algorithm })
@@ -64,7 +85,7 @@ export const findNearestFacility = async (source, facilityType, algorithm = 'dij
 };
 
 export const runKnapsack = async (items, capacity) => {
-  const res = await fetch(`${API_URL}/knapsack`, {
+  const res = await fetchWithTimeout(`${API_URL}/knapsack`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ items, capacity })
