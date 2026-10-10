@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { getStatistics, getGraphData } from '../services/api';
 import StatCard from '../components/StatCard';
 import GraphVisualizer from '../components/GraphVisualizer';
-import { ShieldAlert, Route, AlertTriangle, Users, MapPin, RefreshCw } from 'lucide-react';
+import { ShieldAlert, Route, AlertTriangle, Users, MapPin } from 'lucide-react';
 
 const Dashboard = () => {
   const [stats, setStats] = useState(null);
@@ -34,15 +34,9 @@ const Dashboard = () => {
 
   return (
     <div className="max-w-6xl mx-auto space-y-6 pb-12">
-      <header className="mb-8 flex justify-between items-end">
-        <div>
-          <h1 className="text-3xl font-black text-slate-800 mb-2 drop-shadow-sm">Emergency Operations Center</h1>
-          <p className="text-slate-600 font-medium">Real-time overview of the disaster network and algorithmic routing systems.</p>
-        </div>
-        <button onClick={fetchData} disabled={loading} className="flex items-center gap-2 bg-white/80 hover:bg-white text-slate-700 px-4 py-2 rounded-xl border border-slate-200 shadow-sm transition-all">
-          <RefreshCw size={18} className={loading ? 'animate-spin text-slate-400' : ''} />
-          {loading ? 'Refreshing...' : 'Refresh'}
-        </button>
+      <header className="mb-8">
+        <h1 className="text-3xl font-black text-slate-800 mb-2 drop-shadow-sm">Emergency Operations Center</h1>
+        <p className="text-slate-600 font-medium">Real-time overview of the disaster network and algorithmic routing systems.</p>
       </header>
 
       {error && (
